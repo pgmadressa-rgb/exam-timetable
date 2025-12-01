@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Studies Exam Timetable by Class</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .main-header {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .main-header h1 { font-size: 2.2rem; color: #1f2937; margin-bottom: 0.5rem; }
+        .main-header p { font-size: 1.1rem; color: #6b7280; }
+        .revision-notice {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            color: #92400e;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .class-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .class-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .class-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); }
+        .class-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .class-timetable {
+            display: none;
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.4s ease;
+        }
+        .class-timetable.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .class-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .class-header h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .exam-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 1rem; }
+        .exam-table thead { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .exam-table th {
+            padding: 1rem;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+        }
+        .exam-table th:first-child { border-top-left-radius: 12px; }
+        .exam-table th:last-child { border-top-right-radius: 12px; }
+        .exam-table td { padding: 1rem; border-bottom: 1px solid #e5e7eb; color: #374151; }
+        .exam-table tbody tr { transition: all 0.3s ease; }
+        .exam-table tbody tr:hover { background: #f9fafb; }
+        .exam-table tbody tr:last-child td { border-bottom: none; }
+        .date-cell { font-weight: 600; color: #667eea; white-space: nowrap; }
+        .subject-cell { font-weight: 600; color: #1f2937; }
+        .topic-tag {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.2rem;
+        }
+        .syllabus-tag {
+            display: inline-block;
+            background: #fce7f3;
+            color: #9f1239;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.2rem;
+        }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .main-header h1 { font-size: 1.6rem; }
+            .class-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+            .exam-table { font-size: 0.9rem; }
+            .exam-table th, .exam-table td { padding: 0.75rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-header">
+            <h1>📖 Islamic Studies Exam Timetable</h1>
+            <p>December 2024 - Individual Class Schedules</p>
+        </div>
+        <div class="revision-notice">📚 Revision Period Starts: Thursday, 4th December</div>
+        <div class="class-selector">
+            <button class="class-btn active" onclick="showClass(0)">Reception</button>
+            <button class="class-btn" onclick="showClass(1)">Class 1</button>
+            <button class="class-btn" onclick="showClass(2)">Class 2</button>
+            <button class="class-btn" onclick="showClass(3)">Class 3</button>
+            <button class="class-btn" onclick="showClass(4)">Class 4</button>
+            <button class="class-btn" onclick="showClass(5)">Class 5</button>
+            <button class="class-btn" onclick="showClass(6)">Class 6</button>
+            <button class="class-btn" onclick="showClass(7)">Class 7</button>
+            <button class="class-btn" onclick="showClass(8)">Class 8</button>
+        </div>
+        <div id="timetables"></div>
+    </div>
+    <script>
+        const classData = [
+            { name: "Reception", exams: [
+                ["19th Dec", "Friday", "Qaida", "-"]
+            ]},
+            { name: "Class 1", exams: [
+                ["12th Dec", "Friday", "Surah & Duas", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "Islamiyyah", "Akhlaaq"],
+                ["17th Dec", "Wed", "Islamiyyah", "Islamic History"],
+                ["18th Dec", "Thursday", "Islamiyyah", "Aqaid"],
+                ["19th Dec", "Friday", "Qaida", "-"]
+            ]},
+            { name: "Class 2", exams: [
+                ["11th Dec", "Thursday", "Quran", "-"],
+                ["12th Dec", "Friday", "Surah", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "Islamiyyah", "Akhlaaq"],
+                ["17th Dec", "Wed", "Islamiyyah", "Islamic History"],
+                ["18th Dec", "Thursday", "Islamiyyah", "Aqaid"],
+                ["19th Dec", "Friday", "Duas", "-"]
+            ]},
+            { name: "Class 3", exams: [
+                ["11th Dec", "Thursday", "Quran", "-"],
+                ["12th Dec", "Friday", "Surah", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "Islamiyyah", "Akhlaaq"],
+                ["17th Dec", "Wed", "Islamiyyah", "Islamic History"],
+                ["18th Dec", "Thursday", "Islamiyyah", "Aqaid"],
+                ["19th Dec", "Friday", "Duas", "-"]
+            ]},
+            { name: "Class 4", exams: [
+                ["11th Dec", "Thursday", "Quran", "-"],
+                ["12th Dec", "Friday", "Surah", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "An-Nasihah", "Seerah, Akhlaaq"],
+                ["17th Dec", "Wed", "An-Nasihah", "Revision Day"],
+                ["18th Dec", "Thursday", "An-Nasihah", "Aqaid, Tarikh"],
+                ["19th Dec", "Friday", "Duas", "-"]
+            ]},
+            { name: "Class 5", exams: [
+                ["11th Dec", "Thursday", "Quran", "-"],
+                ["12th Dec", "Friday", "Surah", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "An-Nasihah", "Seerah, Akhlaaq"],
+                ["17th Dec", "Wed", "An-Nasihah", "Revision Day"],
+                ["18th Dec", "Thursday", "An-Nasihah", "Aqaid, Tarikh"],
+                ["19th Dec", "Friday", "Duas", "-"]
+            ]},
+            { name: "Class 6", exams: [
+                ["11th Dec", "Thursday", "Quran", "-"],
+                ["12th Dec", "Friday", "Surah", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "An-Nasihah", "Seerah, Akhlaaq"],
+                ["17th Dec", "Wed", "An-Nasihah", "Revision Day"],
+                ["18th Dec", "Thursday", "An-Nasihah", "Aqaid, Tarikh"],
+                ["19th Dec", "Friday", "Duas", "-"]
+            ]},
+            { name: "Class 7", exams: [
+                ["11th Dec", "Thursday", "Quran", "-"],
+                ["12th Dec", "Friday", "Surah", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "An-Nasihah", "Seerah, Akhlaaq"],
+                ["17th Dec", "Wed", "An-Nasihah", "Revision Day"],
+                ["18th Dec", "Thursday", "An-Nasihah", "Aqaid, Tarikh"],
+                ["19th Dec", "Friday", "Duas", "-"]
+            ]},
+            { name: "Class 8", exams: [
+                ["11th Dec", "Thursday", "Quran", "-"],
+                ["12th Dec", "Friday", "Surah", "-"],
+                ["15th Dec", "Monday", "Fiqh", "Islamiyyah, An-Nasihah"],
+                ["16th Dec", "Tuesday", "An-Nasihah", "Seerah, Akhlaaq"],
+                ["17th Dec", "Wed", "An-Nasihah", "Revision Day"],
+                ["18th Dec", "Thursday", "An-Nasihah", "Aqaid, Tarikh"],
+                ["19th Dec", "Friday", "Duas", "-"]
+            ]}
+        ];
+
+        function renderTimetables() {
+            const container = document.getElementById('timetables');
+            container.innerHTML = classData.map((cls, idx) => `
+                <div class="class-timetable ${idx === 0 ? 'active' : ''}" id="class${idx}">
+                    <div class="class-header">
+                        <h2>📚 ${cls.name}</h2>
+                        <p>Exam Schedule</p>
+                    </div>
+                    <table class="exam-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Day</th>
+                                <th>Subject</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${cls.exams.map(exam => `
+                                <tr>
+                                    <td class="date-cell">${exam[0]}</td>
+                                    <td>${exam[1]}</td>
+                                    <td class="subject-cell">${exam[2]}</td>
+                                    <td>${exam[3]}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `).join('');
+        }
+
+        function showClass(idx) {
+            document.querySelectorAll('.class-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === idx);
+            });
+            document.querySelectorAll('.class-timetable').forEach((tt, i) => {
+                tt.classList.toggle('active', i === idx);
+            });
+        }
+
+        renderTimetables();
+    </script>
+</body>
+</html>
